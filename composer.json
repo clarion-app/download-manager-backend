@@ -1,0 +1,33 @@
+{
+  "name": "clarion-app/download-manager-backend",
+  "description": "Describe your package",
+  "type": "library",
+  "license": "MIT",
+  "autoload": {
+    "psr-4": {
+      "ClarionApp\\DownloadManager\\": "src/"
+    }
+  },
+  "authors": [
+    {
+      "name": "Tim Schwartz",
+      "email": "tim@metaverse.systems"
+    }
+  ],
+  "require": {
+    "clarion-app/eloquent-multichain-bridge": "dev-main",
+    "clarion-app/backend": "dev-main"
+  },
+  "extra": {
+    "laravel": {
+      "providers": [
+        "ClarionApp\\DownloadManager\\DownloadManagerServiceProvider"
+      ]
+    },
+    "clarion": {
+      "app-name": "@clarion-app/download-manager",
+      "description": "Provides operations to implement {user fills this in later}."
+    }
+  },
+  "minimum-stability": "dev"
+}

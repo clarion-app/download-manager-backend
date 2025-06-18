@@ -5,7 +5,7 @@
   "license": "MIT",
   "autoload": {
     "psr-4": {
-      "ClarionApp\\DownloadManager\\": "src/"
+      "ClarionApp\\DownloadManagerBackend\\": "src/"
     }
   },
   "authors": [
@@ -21,7 +21,7 @@
   "extra": {
     "laravel": {
       "providers": [
-        "ClarionApp\\DownloadManager\\DownloadManagerServiceProvider"
+        "ClarionApp\\DownloadManagerBackend\\DownloadManagerServiceProvider"
       ]
     },
     "clarion": {

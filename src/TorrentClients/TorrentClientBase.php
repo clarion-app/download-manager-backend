@@ -1,6 +1,6 @@
 <?php
 
-namespace ClarionApp\DownloadManager;
+namespace ClarionApp\DownloadManagerBackend\TorrentClients;
 
 abstract class TorrentClientBase
 {

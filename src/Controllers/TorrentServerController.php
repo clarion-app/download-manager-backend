@@ -1,10 +1,10 @@
 <?php
 
-namespace ClarionApp\DownloadManager\Controllers;
+namespace ClarionApp\DownloadManagerBackend\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
-use ClarionApp\DownloadManager\Models\TorrentServer;
+use ClarionApp\DownloadManagerBackend\Models\TorrentServer;
 
 class TorrentServerController extends Controller
 {
@@ -21,7 +21,7 @@ class TorrentServerController extends Controller
             if(stripos($file, ".swp") !== false) continue;
             $file = str_replace(".php", "", $file);
 
-            $className = "ClarionApp\\DownloadManager\\TorrentClients\\$file";
+            $className = "ClarionApp\\DownloadManagerBackend\\TorrentClients\\$file";
             
 
             if ($file !== 'TorrentClientBase') {
@@ -32,7 +32,7 @@ class TorrentServerController extends Controller
         return $clientClasses;
     }
 
-    private function getClientTypes()
+    public function getClientTypes()
     {
         $types = array();
         $classes = $this->getClientClasses();
@@ -51,11 +51,7 @@ class TorrentServerController extends Controller
     public function index()
     {
         $servers = TorrentServer::all();
-        $clientTypes = $this->getClientTypes();
-        return response()->json([
-            "servers" => $servers,
-            "clientTypes"=>$clientTypes
-        ]);
+        return response()->json($servers);
     }
 
     /**
@@ -67,10 +63,13 @@ class TorrentServerController extends Controller
     public function store(Request $request)
     {
         $data = $request->validate([
-            'local_node' => 'required|string',
             'address' => 'required|string',
             'type' => 'required|string',
         ]);
+        
+        // Set local_node from config
+        $data['local_node'] = config('clarion.node_id');
+        
         $server = TorrentServer::create($data);
         return response()->json($server, 201);
     }
@@ -96,10 +95,11 @@ class TorrentServerController extends Controller
     public function update(Request $request, TorrentServer $torrentServer)
     {
         $data = $request->validate([
-            'local_node' => 'required|string',
             'address' => 'required|string',
             'type' => ['required','string'],
         ]);
+        
+        // local_node should not be updated, it remains from config
         $torrentServer->update($data);
         return response()->json($torrentServer);
     }

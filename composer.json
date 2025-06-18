@@ -26,7 +26,7 @@
     },
     "clarion": {
       "app-name": "@clarion-app/download-manager",
-      "description": "Provides operations to implement {user fills this in later}."
+      "description": "Provides operations to manage downloads."
     }
   },
   "minimum-stability": "dev"

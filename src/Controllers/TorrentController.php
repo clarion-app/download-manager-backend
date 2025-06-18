@@ -5,6 +5,8 @@ namespace ClarionApp\DownloadManagerBackend\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use ClarionApp\DownloadManagerBackend\Models\Torrent;
+use ClarionApp\DownloadManagerBackend\Models\TorrentServer;
+use Auth;
 
 class TorrentController extends Controller
 {
@@ -28,8 +30,7 @@ class TorrentController extends Controller
     public function store(Request $request)
     {
         $data = $request->validate([
-            'server_id' => 'required|uuid',
-            'user_id' => 'nullable|uuid',
+            'server_id' => 'nullable|uuid',
             'magnetURI' => 'required|string',
             'hash_string' => 'nullable|string',
             'name' => 'nullable|string',
@@ -37,6 +38,10 @@ class TorrentController extends Controller
         
         // Set local_node from config
         $data['local_node'] = config('clarion.node_id');
+        $data['user_id'] = Auth::user() ? Auth::user()->id : null;
+        if(!isset($data['server_id'])) {
+            $data['server_id'] = TorrentServer::where('local_node', $data['local_node'])->first()->id;
+        }
         
         if(substr($data['magnetURI'], 0, 6) === "magnet")
         {
@@ -50,6 +55,7 @@ class TorrentController extends Controller
         }
 
         $torrent = Torrent::create($data);
+        \Artisan::call('torrent:check');
         return response()->json($torrent, 201);
     }
 
@@ -88,13 +94,27 @@ class TorrentController extends Controller
     }
 
     /**
+     * Mark the specified torrent as incomplete.
+     *
+     * @param  \ClarionApp\DownloadManager\Models\Torrent  $torrent
+     * @return \Illuminate\Http\Response
+     */
+    public function markIncomplete($id)
+    {
+        $torrent = Torrent::findOrFail($id);
+        $torrent->update(['completed_at' => null, 'hash_string' => null]);
+        return response()->json($torrent);
+    }
+
+    /**
      * Remove the specified torrent.
      *
      * @param  \ClarionApp\DownloadManager\Models\Torrent  $torrent
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Torrent $torrent)
+    public function destroy($id)
     {
+        $torrent = Torrent::findOrFail($id);
         $torrent->delete();
         return response()->json(null, 204);
     }

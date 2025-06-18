@@ -1,6 +1,6 @@
 <?php
 
-namespace ClarionApp\DownloadManager\TorrentClients;
+namespace ClarionApp\DownloadManagerBackend\TorrentClients;
 
 class TransmissionClient extends TorrentClientBase
 {

@@ -1,6 +1,6 @@
 <?php
 
-namespace ClarionApp\DownloadManager\Models;
+namespace ClarionApp\DownloadManagerBackend\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;

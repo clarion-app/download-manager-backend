@@ -1,8 +1,9 @@
 <?php
 
-namespace ClarionApp\DownloadManager;
+namespace ClarionApp\DownloadManagerBackend;
 
 use ClarionApp\Backend\ClarionPackageServiceProvider;
+use ClarionApp\DownloadManagerBackend\Commands\CheckTorrent;
 
 class DownloadManagerServiceProvider extends ClarionPackageServiceProvider
 {
@@ -21,5 +22,8 @@ class DownloadManagerServiceProvider extends ClarionPackageServiceProvider
     public function register(): void
     {
         parent::register();
+        $this->commands([
+            CheckTorrent::class,
+        ]);
     }
 }

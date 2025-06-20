@@ -1,5 +1,6 @@
 {
   "name": "clarion-app/download-manager-backend",
+  "version": "1.0.0",
   "description": "Describe your package",
   "type": "library",
   "license": "MIT",

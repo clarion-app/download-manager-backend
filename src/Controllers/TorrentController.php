@@ -17,7 +17,7 @@ class TorrentController extends Controller
      */
     public function index()
     {
-        $torrents = Torrent::all();
+        $torrents = Torrent::orderBy('created_at', 'DESC')->get();
         return response()->json($torrents);
     }
 

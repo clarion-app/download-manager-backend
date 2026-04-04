@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Broadcast;
 use ClarionApp\DownloadManagerBackend\Controllers\TorrentServerController;
 use ClarionApp\DownloadManagerBackend\Controllers\TorrentController;
 
@@ -13,4 +14,8 @@ Route::group(['middleware'=>['auth:api'], 'prefix'=>$this->routePrefix ], functi
     
     // Additional torrent actions
     Route::patch('torrents/{torrent}/mark-incomplete', [TorrentController::class, 'markIncomplete']);
+});
+
+Broadcast::channel('User.{id}', function ($user, $id) {
+    return $user->id === $id;
 });

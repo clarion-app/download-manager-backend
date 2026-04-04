@@ -5,6 +5,7 @@ namespace ClarionApp\DownloadManagerBackend\Commands;
 use Illuminate\Console\Command;
 use ClarionApp\DownloadManagerBackend\Models\Torrent;
 use ClarionApp\DownloadManagerBackend\Models\TorrentServer;
+use ClarionApp\DownloadManagerBackend\Events\TorrentCompletedEvent;
 
 class CheckTorrent extends Command
 {
@@ -88,6 +89,14 @@ class CheckTorrent extends Command
                     $torrentd->remove($torrent->hash_string);
                     $torrent->completed_at = date("Y-m-d H:i:s");
                     $torrent->save();
+
+                    event(new TorrentCompletedEvent(
+                        torrent_id: $torrent->id,
+                        name: $torrent->name,
+                        hash_string: $torrent->hash_string,
+                        completed_at: $torrent->completed_at,
+                        user_id: $torrent->user_id
+                    ));
                 }
             }
             else

@@ -90,6 +90,8 @@ class CheckTorrent extends Command
                     $torrent->completed_at = date("Y-m-d H:i:s");
                     $torrent->save();
 
+                    \Log::info("Torrent completed: {$torrent->id} - {$torrent->name}");
+
                     event(new TorrentCompletedEvent(
                         torrent_id: $torrent->id,
                         name: $torrent->name,

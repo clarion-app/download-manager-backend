@@ -3,6 +3,7 @@
 namespace ClarionApp\DownloadManagerBackend\Commands;
 
 use Illuminate\Console\Command;
+use ClarionApp\Backend\Services\NotificationDispatcher;
 use ClarionApp\DownloadManagerBackend\Models\Torrent;
 use ClarionApp\DownloadManagerBackend\Models\TorrentServer;
 use ClarionApp\DownloadManagerBackend\Events\TorrentCompletedEvent;
@@ -101,14 +102,12 @@ class CheckTorrent extends Command
                     ));
 
                     $displayName = $torrent->name ?: substr($torrent->hash_string ?? '', 0, 8) ?: 'Download';
-                    if (class_exists(\ClarionApp\TelegramIntegration\Events\TelegramNotificationEvent::class)) {
-                        event(new \ClarionApp\TelegramIntegration\Events\TelegramNotificationEvent(
-                            user_id: $torrent->user_id,
-                            category: 'download_complete',
-                            title: 'Download Complete',
-                            message: "{$displayName} has finished downloading"
-                        ));
-                    }
+                    app(NotificationDispatcher::class)->dispatch(
+                        $torrent->user_id,
+                        'download_complete',
+                        'Download Complete',
+                        "{$displayName} has finished downloading"
+                    );
                 }
             }
             else

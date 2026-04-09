@@ -99,6 +99,16 @@ class CheckTorrent extends Command
                         completed_at: $torrent->completed_at,
                         user_id: $torrent->user_id
                     ));
+
+                    $displayName = $torrent->name ?: substr($torrent->hash_string ?? '', 0, 8) ?: 'Download';
+                    if (class_exists(\ClarionApp\TelegramIntegration\Events\TelegramNotificationEvent::class)) {
+                        event(new \ClarionApp\TelegramIntegration\Events\TelegramNotificationEvent(
+                            user_id: $torrent->user_id,
+                            category: 'download_complete',
+                            title: 'Download Complete',
+                            message: "{$displayName} has finished downloading"
+                        ));
+                    }
                 }
             }
             else

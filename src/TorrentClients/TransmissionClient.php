@@ -13,7 +13,8 @@ class TransmissionClient extends TorrentClientBase
         $this->rpc_url = "http://$address/transmission/rpc";
 
         @file_get_contents($this->rpc_url);
-        foreach($http_response_header as $line)
+        $responseHeaders = $http_response_header ?? [];
+        foreach($responseHeaders as $line)
         {
             $header = explode(":", $line);
             if(count($header) < 2) continue;
